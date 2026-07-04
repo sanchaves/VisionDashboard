@@ -1,0 +1,14 @@
+# Dependências
+node_modules/
+
+# Configurações locais / credenciais
+.env
+.env.*
+
+# Mantém o arquivo de exemplo no GitHub
+!.env.example
+
+# Sistema operacional / editor
+.DS_Store
+Thumbs.db
+.vscode/settings.json

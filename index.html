@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionDashboard - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="./CSS/style.css">
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="logo-icon"><img style="height: 100px;" src="./Assets/logo.png" alt="Logo VisionDashboard"></div>
+        <h1>VisionDashboard</h1>
+        <p class="subtitle">Entre para acessar sua conta</p>
+        <form id="loginForm">
+            <div class="input-group">
+                <label>E-mail</label>
+                <input type="email" id="email" placeholder="seu@email.com" required>
+            </div>
+            <div class="input-group">
+                <label>Senha</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            <div class="form-actions">
+                <label class="remember-me"><input type="checkbox"> Lembrar-me</label>
+                <a href="#" class="forgot-password">Esqueceu a senha?</a>
+            </div>
+            <button type="submit" class="btn-submit" id="btnEntrar">Entrar</button>
+        </form>
+    </div>
+    <script type="module" src="./JS/controller.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionDashboard - Analista</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="./CSS/style.css">
+</head>
+
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img class="logo-img" src="./Assets/logo.png" alt="Logo VisionDashboard">
+            <span style="font-weight:400; font-size:14px; color:#64748b;">| Área do Analista</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <span id="txtBoasVindas" style="font-size: 14px; font-weight: 500;">Carregando...</span>
+            <a href="#" class="logout-btn" id="btnSair"><i data-lucide="log-out"></i> Sair</a>
+        </div>
+    </nav>
+
+    <div class="container-analista">
+        <div class="task-grid">
+            <button class="task-card active" type="button" data-section="secVenda">
+                <i data-lucide="shopping-cart"></i>
+                <h3>Vendas</h3>
+                <p>Registre uma venda e acompanhe a comissão gerada.</p>
+            </button>
+
+            <button class="task-card" type="button" data-section="secMeta" data-load-metas="true">
+                <i data-lucide="target"></i>
+                <h3>Metas</h3>
+                <p>Defina metas mensais e acompanhe os ajustes necessários.</p>
+            </button>
+
+            <button class="task-card" type="button" data-section="secEditarVenda" data-load-vendas="true">
+                <i data-lucide="edit-3"></i>
+                <h3>Vendas lançadas</h3>
+                <p>Consulte o histórico, corrija informações ou remova lançamentos.</p>
+            </button>
+
+            <button class="task-card" type="button" data-section="secComissaoProduto">
+                <i data-lucide="badge-dollar-sign"></i>
+                <h3>Comissões</h3>
+                <p>Ajuste valores, premiações fixas ou percentuais dos produtos.</p>
+            </button>
+
+            <button class="task-card" type="button" data-section="secNovoProduto" data-load-produtos="true">
+                <i data-lucide="package-plus"></i>
+                <h3>Produtos</h3>
+                <p>Cadastre equipamentos e mantenha a lista de produtos atualizada.</p>
+            </button>
+        </div>
+
+        <div id="secVenda" class="task-section active">
+            <form id="formVenda" class="form-container">
+                <div class="section-heading">
+                    <div>
+                        <h2 class="form-title">Cadastrar Nova Venda</h2>
+                        <p class="section-subtitle">Ao salvar, a comissão é calculada automaticamente com a regra do produto.</p>
+                    </div>
+                    <span class="section-tag">Novo lançamento</span>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="vendedorSelect">Vendedor</label>
+                        <select id="vendedorSelect" required>
+                            <option value="">Selecione o vendedor...</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="produtoSelect">Produto / Equipamento</label>
+                        <select id="produtoSelect" required>
+                            <option value="">Selecione o produto...</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="inputData">Data da venda</label>
+                        <input type="date" id="inputData" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="inputValor">Valor total da venda (R$)</label>
+                        <input type="number" step="0.01" id="inputValor" placeholder="0,00" required>
+                    </div>
+                </div>
+
+                <div class="status-box" id="previewComissaoVenda">Selecione um produto para visualizar a regra de comissão.</div>
+                <button type="submit" class="btn-submit">Cadastrar venda e gerar comissão</button>
+            </form>
+        </div>
+
+        <div id="secMeta" class="task-section">
+            <div class="form-container">
+                <div class="section-heading">
+                    <div>
+                        <h2 class="form-title">Metas dos Vendedores</h2>
+                        <p class="section-subtitle">Cadastre metas mensais, consulte o histórico e faça correções quando necessário.</p>
+                    </div>
+                    <span class="section-tag">Cadastro e acompanhamento</span>
+                </div>
+
+                <form id="formMeta" class="sub-card">
+                    <h3>Cadastrar meta</h3>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label for="vendedorMetaSelect">Vendedor</label>
+                            <select id="vendedorMetaSelect" required>
+                                <option value="">Selecione o vendedor...</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="inputMesAno">Mês de referência</label>
+                            <input type="month" id="inputMesAno" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="inputValorMeta">Valor da meta (R$)</label>
+                            <input type="number" step="0.01" id="inputValorMeta" placeholder="0,00" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Cadastrar meta</button>
+                </form>
+
+                <div id="boxEditarMeta" class="status-box hidden">
+                    <h3 style="margin-top:0;">Editar meta selecionada</h3>
+                    <form id="formEditarMeta">
+                        <input type="hidden" id="editMetaId">
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="editMetaVendedorSelect">Vendedor</label>
+                                <select id="editMetaVendedorSelect" required></select>
+                            </div>
+                            <div class="input-group">
+                                <label for="editMetaMesAno">Mês</label>
+                                <input type="month" id="editMetaMesAno" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="editMetaValor">Valor da meta</label>
+                                <input type="number" step="0.01" id="editMetaValor" required>
+                            </div>
+                        </div>
+                        <div class="table-actions">
+                            <button type="submit" class="btn-small">Salvar alteração</button>
+                            <button type="button" class="btn-small btn-muted" id="btnCancelarEdicaoMeta">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="filter-panel">
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label for="filtroVendedorMetas">Filtrar por vendedor</label>
+                            <select id="filtroVendedorMetas">
+                                <option value="">Todos os vendedores</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="filtroMesMetas">Filtrar por mês</label>
+                            <input type="month" id="filtroMesMetas">
+                        </div>
+                    </div>
+                    <div class="table-actions">
+                        <button type="button" class="btn-small" id="btnBuscarMetas">Buscar metas</button>
+                        <button type="button" class="btn-small btn-muted" id="btnLimparFiltrosMetas">Limpar filtros</button>
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Vendedor</th>
+                                <th>Mês</th>
+                                <th>Meta</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyMetas">
+                            <tr><td colspan="4">Clique em “Buscar metas”.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="secEditarVenda" class="task-section">
+            <div class="form-container">
+                <div class="section-heading">
+                    <div>
+                        <h2 class="form-title">Vendas Lançadas</h2>
+                        <p class="section-subtitle">Consulte, corrija ou remova vendas já registradas no sistema.</p>
+                    </div>
+                    <span class="section-tag">Consulta e manutenção</span>
+                </div>
+
+                <div class="filter-panel">
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label for="filtroVendedorHistorico">Filtrar por vendedor</label>
+                            <select id="filtroVendedorHistorico">
+                                <option value="">Todos os vendedores</option>
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="filtroMesHistorico">Filtrar por mês</label>
+                            <input type="month" id="filtroMesHistorico">
+                        </div>
+                    </div>
+
+                    <div class="table-actions">
+                        <button type="button" class="btn-small" id="btnBuscarVendas">Buscar vendas</button>
+                        <button type="button" class="btn-small btn-muted" id="btnLimparFiltrosHistorico">Limpar filtros</button>
+                    </div>
+                </div>
+
+                <div id="boxEditarVenda" class="status-box hidden">
+                    <h3 style="margin-top:0;">Editar venda selecionada</h3>
+                    <form id="formEditarVenda">
+                        <input type="hidden" id="editVendaId">
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="editVendedorSelect">Vendedor</label>
+                                <select id="editVendedorSelect" required></select>
+                            </div>
+                            <div class="input-group">
+                                <label for="editProdutoSelect">Produto</label>
+                                <select id="editProdutoSelect" required></select>
+                            </div>
+                            <div class="input-group">
+                                <label for="editDataVenda">Data</label>
+                                <input type="date" id="editDataVenda" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="editValorVenda">Valor da venda</label>
+                                <input type="number" step="0.01" id="editValorVenda" required>
+                            </div>
+                        </div>
+                        <div class="status-box" id="previewComissaoEdicao"></div>
+                        <div class="table-actions">
+                            <button type="submit" class="btn-small">Salvar alteração</button>
+                            <button type="button" class="btn-small btn-muted" id="btnCancelarEdicaoVenda">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Vendedor</th>
+                                <th>Produto</th>
+                                <th>Valor faturado</th>
+                                <th>Comissão</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyVendas">
+                            <tr><td colspan="6">Clique em “Buscar vendas”.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="secComissaoProduto" class="task-section">
+            <form id="formProdutoComissao" class="form-container">
+                <div class="section-heading">
+                    <div>
+                        <h2 class="form-title">Regras de Comissão</h2>
+                        <p class="section-subtitle">Selecione um produto para consultar e ajustar a regra usada no cálculo da comissão.</p>
+                    </div>
+                    <span class="section-tag">Consulta e manutenção</span>
+                </div>
+
+                <div class="input-group">
+                    <label for="produtoComissaoSelect">Produto</label>
+                    <select id="produtoComissaoSelect" required>
+                        <option value="">Selecione o produto...</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="inputValorPadraoProduto">Valor padrão do produto (R$)</label>
+                        <input type="number" step="0.01" id="inputValorPadraoProduto" placeholder="0,00" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="inputPremiacaoFixaProduto">Premiação fixa (R$)</label>
+                        <input type="number" step="0.01" id="inputPremiacaoFixaProduto" placeholder="Use 0 se for percentual">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="inputPercentualProduto">Percentual comissão (%)</label>
+                        <input type="number" step="0.01" id="inputPercentualProduto" placeholder="Ex: 10 para 10%">
+                    </div>
+                </div>
+
+                <div class="status-box">Use premiação fixa para produtos com comissão fixa. Use percentual somente para produtos como “Pacotes vendas de lentes”.</div>
+
+                <div class="table-actions">
+                    <button type="submit" class="btn-small">Salvar regra do produto</button>
+                    <button type="button" class="btn-small btn-danger" id="btnExcluirProdutoComissao">Excluir produto selecionado</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="secNovoProduto" class="task-section">
+            <div class="form-container">
+                <div class="section-heading">
+                    <div>
+                        <h2 class="form-title">Produtos e Equipamentos</h2>
+                        <p class="section-subtitle">Cadastre novos itens, consulte a lista e mantenha os dados atualizados.</p>
+                    </div>
+                    <span class="section-tag">Cadastro e acompanhamento</span>
+                </div>
+
+                <form id="formNovoProduto" class="sub-card">
+                    <h3>Cadastrar produto</h3>
+                    <div class="input-group">
+                        <label for="inputNovoProdutoNome">Nome do produto</label>
+                        <input type="text" id="inputNovoProdutoNome" placeholder="Ex: Novo equipamento" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label for="inputNovoProdutoValor">Valor padrão (R$)</label>
+                            <input type="number" step="0.01" id="inputNovoProdutoValor" placeholder="0,00" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="inputNovoProdutoPremiacao">Premiação fixa (R$)</label>
+                            <input type="number" step="0.01" id="inputNovoProdutoPremiacao" placeholder="Use 0 se for percentual">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="inputNovoProdutoPercentual">Percentual comissão (%)</label>
+                            <input type="number" step="0.01" id="inputNovoProdutoPercentual" placeholder="Ex: 10 para 10%">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-submit">Cadastrar produto</button>
+                </form>
+
+                <div id="boxEditarProduto" class="status-box hidden">
+                    <h3 style="margin-top:0;">Editar produto selecionado</h3>
+                    <form id="formEditarProduto">
+                        <input type="hidden" id="editProdutoId">
+                        <div class="input-group">
+                            <label for="editProdutoNome">Nome do produto</label>
+                            <input type="text" id="editProdutoNome" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="input-group">
+                                <label for="editProdutoValor">Valor padrão</label>
+                                <input type="number" step="0.01" id="editProdutoValor" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="editProdutoPremiacao">Premiação fixa</label>
+                                <input type="number" step="0.01" id="editProdutoPremiacao">
+                            </div>
+                            <div class="input-group">
+                                <label for="editProdutoPercentual">Percentual comissão (%)</label>
+                                <input type="number" step="0.01" id="editProdutoPercentual">
+                            </div>
+                        </div>
+                        <div class="table-actions">
+                            <button type="submit" class="btn-small">Salvar alteração</button>
+                            <button type="button" class="btn-small btn-muted" id="btnCancelarEdicaoProduto">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="table-actions" style="margin-bottom:12px;">
+                    <button type="button" class="btn-small" id="btnAtualizarProdutos">Atualizar lista</button>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th>Valor padrão</th>
+                                <th>Premiação fixa</th>
+                                <th>Percentual</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyProdutos">
+                            <tr><td colspan="5">Carregando produtos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="./JS/controller.js"></script>
+</body>
+
+</html>

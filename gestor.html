@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionDashboard - Gestão Estratégica</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="./CSS/style.css">
+</head>
+
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="nav-brand"><img class="logo-img" src="./Assets/logo.png" alt="Logo VisionDashboard"> <span
+                style="font-weight:400; font-size:14px; color:#64748b;">| Direção Geral</span></div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <span id="txtBoasVindas" style="font-size: 14px; font-weight: 500;">Olá, Gestor</span>
+            <a href="#" class="logout-btn" id="btnSair"><i data-lucide="log-out"></i> Sair</a>
+        </div>
+    </nav>
+
+    <div class="gestor-layout">
+        <aside class="sidebar-filtros">
+            <h3 style="font-size: 14px; margin-bottom: 16px; display:flex; align-items:center; gap:6px;"><i
+                    data-lucide="filter" style="width:16px;"></i> Filtros Analíticos</h3>
+
+            <div class="input-group">
+                <label for="filtroVendedor">Filtro por Vendedor</label>
+                <select id="filtroVendedor">
+                    <option value="todos">Todos os Vendedores</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="filtroProduto">Filtro por Produto</label>
+                <select id="filtroProduto">
+                    <option value="todos">Todos os Produtos</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="filtroDataInicio">Data Inicial</label>
+                <input type="date" id="filtroDataInicio">
+            </div>
+
+            <div class="input-group">
+                <label for="filtroDataFim">Data Final</label>
+                <input type="date" id="filtroDataFim">
+            </div>
+
+            <button id="btnAplicarFiltros" class="btn-submit" style="margin-top: 10px;">Aplicar Painel</button>
+        </aside>
+
+        <main>
+            <div class="grid-kpis">
+                <div class="card-kpi">
+                    <div>
+                        <h4>Faturamento Total</h4>
+                        <p id="kpiFaturamento">R$ 0,00</p>
+                    </div>
+                    <i data-lucide="wallet" style="color:#3b82f6"></i>
+                </div>
+                <div class="card-kpi">
+                    <div>
+                        <h4>Ticket Médio</h4>
+                        <p id="kpiTicket">R$ 0,00</p>
+                    </div>
+                    <i data-lucide="dollar-sign" style="color:#10b981"></i>
+                </div>
+                <div class="card-kpi">
+                    <div>
+                        <h4>Total de Comissões</h4>
+                        <p id="kpiPremios">R$ 0,00</p>
+                    </div>
+                    <i data-lucide="award" style="color:#8b5cf6"></i>
+                </div>
+                <div class="card-kpi">
+                    <div>
+                        <h4>Média Comis. / Venda</h4>
+                        <p id="kpiMediaComissao">R$ 0,00</p>
+                    </div>
+                    <i data-lucide="trending-up" style="color:#f59e0b"></i>
+                </div>
+            </div>
+
+            <div class="grid-graficos">
+                <!-- CORREÇÃO: Adicionado o contêiner de limitação de altura máxima na div do chartRanking -->
+                <div class="card-grafico">
+                    <h3>Ranking de Premiação por Vendedor</h3>
+                    <div style="max-height: 250px; position: relative;">
+                        <canvas id="chartRanking"></canvas>
+                    </div>
+                </div>
+                <div class="card-grafico">
+                    <h3>Volume de Faturamento por Item</h3>
+                    <div style="max-height: 250px; display:flex; justify-content:center;">
+                        <canvas id="chartProdutos"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="secao-historico">
+                <h3><i data-lucide="history" style="width:18px;color:#3b82f6;"></i> Histórico de Vendas Filtrado</h3>
+                <div class="tabela-wrapper">
+                    <table class="tabela-vendas">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Vendedor</th>
+                                <th>Produto Adquirido</th>
+                                <th>Valor Faturado</th>
+                                <th>Comissão Gerada</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpoTabelaVendas">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="./JS/controller.js"></script>
+</body>
+
+</html>

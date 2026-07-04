@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisionDashboard - Vendedor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="./CSS/style.css">
+
+</head>
+
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="nav-brand"><img class="logo-img" src="./Assets/logo.png" alt="Logo VisionDashboard"> <span
+                style="font-weight:400; font-size:14px; color:#64748b;">| Área do Vendedor</span></div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <span id="txtBoasVindas" style="font-size: 14px; font-weight: 500;">Carregando...</span>
+            <a href="#" class="logout-btn" id="btnSair"><i data-lucide="log-out"></i> Sair</a>
+        </div>
+    </nav>
+
+    <div class="container-analista" style="max-width: 1000px;">
+        <div class="filter-box">
+            <div class="input-group" style="margin:0; flex:1;">
+                <label>Data Inicial</label>
+                <input type="date" id="filtroInicio">
+            </div>
+            <div class="input-group" style="margin:0; flex:1;">
+                <label>Data Final</label>
+                <input type="date" id="filtroFim">
+            </div>
+            <button id="btnFiltrar" class="btn-submit"
+                style="width: auto; padding: 12px 24px; margin-bottom: 1px;">Filtrar</button>
+        </div>
+
+        <div class="vendedor-grid">
+            <div class="kpi-card">
+                <div class="kpi-data">
+                    <h3>Minhas Vendas no Mês</h3>
+                    <p id="totalVendas">R$ 0,00</p>
+                </div>
+                <div class="kpi-icon" style="background:#dbeafe; color:#1e40af;"><i data-lucide="trending-up"></i></div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-data">
+                    <h3>Minha Premiação Acumulada</h3>
+                    <p id="totalPremio" style="color: #10b981;">R$ 0,00</p>
+                </div>
+                <div class="kpi-icon" style="background:#d1fae5; color:#065f46;"><i data-lucide="dollar-sign"></i></div>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div
+                style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; color: #475569;">
+                <span>Progresso da Meta Mensal</span>
+                <span id="txtPercentualMeta">0% atingido</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div id="barreProgresso" class="progress-bar-fill"></div>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 13px; color: #64748b;">
+                <span id="metaAtual">Meta: R$ 0,00</span>
+                <span id="metaFalta">Falta: R$ 0,00</span>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h2 style="font-size: 16px; margin-bottom: 16px; color:#1e293b;">Histórico de Vendas Faturadas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Produto / Equipamento</th>
+                        <th>Valor da Venda</th>
+                        <th>Premiação Gerada</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaVendasCorpo">
+                    <tr>
+                        <td colspan="4" style="text-align:center; color:#94a3b8;">Nenhum registro carregado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script type="module" src="./JS/controller.js"></script>
+</body>
+
+</html>
