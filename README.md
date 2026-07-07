@@ -62,11 +62,8 @@ O projeto foi organizado separando responsabilidades:
 
 - HTML5
 - CSS3
-- JavaScript ES Modules
-- Supabase Auth
+- JavaScript
 - Supabase Database
-- Lucide Icons
-- Chart.js
 - Cypress para teste end-to-end
 
 ## Configuração do Supabase
