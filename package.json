@@ -1,0 +1,24 @@
+{
+  "name": "03_desenvolvimento",
+  "version": "1.0.0",
+  "description": "Sistema web desenvolvido para controle de vendas, metas, produtos e comissões de vendedores. O projeto usa arquitetura MVC no front-end e Supabase como banco de dados/back-end na nuvem.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanchaves/VisionDashboard.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sanchaves/VisionDashboard/issues"
+  },
+  "homepage": "https://github.com/sanchaves/VisionDashboard#readme",
+  "devDependencies": {
+    "cypress": "^15.18.0"
+  }
+}
